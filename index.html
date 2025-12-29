@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NITADOL BANK | Private Wealth & Digital Assets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: true}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <style>
+        :root {
+            --navy-dark: #0a1322;
+            --navy-light: #1e293b;
+            --gold: #b39359;
+            --gold-glow: rgba(179, 147, 89, 0.3);
+            --text-gray: #94a3b8;
+            --white: #ffffff;
+            --error: #f87171;
+            --success: #4ade80;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--navy-dark); color: var(--white); overflow-x: hidden; width: 100%; }
+
+        /* --- Live Ticker --- */
+        .ticker-wrap { width: 100%; overflow: hidden; background: #050a14; border-bottom: 1px solid rgba(179, 147, 89, 0.2); padding: 10px 0; white-space: nowrap; }
+        .ticker { display: inline-block; animation: ticker 40s linear infinite; color: var(--gold); font-size: 10px; font-weight: 700; text-transform: uppercase; }
+        .ticker span { margin: 0 30px; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* --- Navigation --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 6%; background: var(--white); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 24px; font-weight: 800; color: var(--navy-dark); text-decoration: none; letter-spacing: -1px; }
+        .logo span { color: var(--gold); }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .btn-log { color: var(--navy-dark); font-weight: 700; cursor: pointer; font-size: 14px; }
+        .btn-reg { background: var(--navy-dark); color: white; padding: 12px 24px; border-radius: 5px; font-weight: 700; text-decoration: none; font-size: 13px; cursor: pointer; }
+
+        /* --- Hero Section --- */
+        .hero { display: flex; flex-direction: column; padding: 80px 6%; background: linear-gradient(180deg, #ffffff 60%, #f8fafc 100%); align-items: center; text-align: center; color: #0f172a; }
+        .hero h1 { font-size: clamp(35px, 8vw, 55px); line-height: 1.1; margin-bottom: 20px; font-weight: 800; }
+        .hero h1 span { color: var(--gold); }
+        .hero p { color: #64748b; font-size: 18px; margin-bottom: 35px; max-width: 600px; }
+        .globe-container { width: 100%; display: flex; justify-content: center; margin-top: 20px; }
+        .globe-graphic { width: 300px; height: 300px; background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, transparent 70%); border-radius: 50%; border: 1px solid var(--gold-glow); box-shadow: 0 0 50px rgba(56, 189, 248, 0.1); animation: pulse 6s infinite ease-in-out; }
+
+        /* --- Mature Dashboard UI --- */
+        #dash-view { display: none; padding: 30px 6%; background: #070d17; min-height: 100vh; }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .account-card { background: linear-gradient(135deg, #1e293b 0%, #0a1322 100%); border: 1px solid var(--gold); border-radius: 20px; padding: 40px; margin-bottom: 25px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .account-card::before { content: "ELITE MEMBER"; position: absolute; top: 15px; right: -35px; background: var(--gold); color: black; padding: 5px 40px; transform: rotate(45deg); font-weight: 800; font-size: 10px; }
+        
+        .grid-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-box small { color: var(--text-gray); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-box p { font-size: 15px; font-weight: 600; margin-top: 8px; color: var(--white); }
+
+        /* --- Modal & Forms --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; overflow-y: auto; }
+        .modal-content { background: #111827; width: 100%; max-width: 480px; padding: 40px; border-radius: 20px; border: 1px solid var(--gold); position: relative; }
+        .modal-content h2 { margin-bottom: 10px; font-size: 24px; }
+        input { width: 100%; padding: 16px; margin-bottom: 15px; background: #1f2937; border: 1px solid #374151; border-radius: 10px; color: white; font-size: 16px; outline: none; }
+        input:focus { border-color: var(--gold); }
+        .primary-btn { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 800; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- Loading Spinner --- */
+        .spinner { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--gold); border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.08); opacity: 1; } }
+
+        /* --- Cookies & Support --- */
+        .cookie-banner { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white); color: #000; padding: 20px 6%; display: flex; justify-content: space-between; align-items: center; z-index: 5000; border-top: 4px solid var(--gold); }
+        .chat-bubble { position: fixed; bottom: 85px; right: 25px; background: var(--gold); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3); z-index: 4000; }
+        
+        #google_translate_element { position: fixed; bottom: 90px; left: 20px; z-index: 4000; transform: scale(0.85); }
+    </style>
+</head>
+<body>
+
+    <div id="google_translate_element"></div>
+
+    <div id="main-site">
+        <div class="ticker-wrap">
+            <div class="ticker">
+                <span>EUR/USD 1.0892 <b>+0.02%</b></span>
+                <span>GOLD/USD 2,154.50 <b>+0.45%</b></span>
+                <span>NITADOL CORP 582.10 <b>+4.2%</b></span>
+                <span>BTC/USD 98,432.00 <b>+1.20%</b></span>
+            </div>
+        </div>
+
+        <nav>
+            <a href="#" class="logo">NITADOL <span>BANK</span></a>
+            <div class="nav-right">
+                <span class="btn-log" onclick="toggleModal('loginMod')">Login</span>
+                <span class="btn-reg" onclick="toggleModal('regMod')">Join Nitadol</span>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1>Private Banking for the <span>Global Elite.</span></h1>
+            <p>Access high-liquidity accounts, offshore wealth management, and institutional-grade security in one interface.</p>
+            <div class="globe-container"><div class="globe-graphic"></div></div>
+            <button class="primary-btn" style="max-width:320px; margin-top:40px" onclick="toggleModal('regMod')">Begin Application</button>
+        </section>
+    </div>
+
+    <div id="dash-view">
+        <div class="dash-header">
+            <div>
+                <h2 id="dName" style="font-size: 24px;">User Name</h2>
+                <span style="color:var(--success); font-size:11px; font-weight:800; letter-spacing:1px;">● SECURE CONNECTION ACTIVE</span>
+            </div>
+            <button onclick="location.reload()" style="background:transparent; border:1px solid var(--gold); color:var(--gold); padding:8px 18px; border-radius:6px; font-weight:700">Logout</button>
+        </div>
+
+        <div class="account-card">
+            <p style="color:var(--gold); font-size:11px; letter-spacing:2px; font-weight:700">TOTAL VALUATION (EUR)</p>
+            <h1 id="dBal" style="font-size: 52px; margin: 15px 0;">€0.00</h1>
+            <p id="dID" style="color:var(--text-gray); font-size:12px">Account ID: 000000</p>
+        </div>
+
+        <div class="grid-stats">
+            <div class="stat-box"><small>Country</small><p id="dCountry">-</p></div>
+            <div class="stat-box"><small>Mobile</small><p id="dPhone">-</p></div>
+            <div class="stat-box"><small>Residential Address</small><p id="dAddress">-</p></div>
+            <div class="stat-box"><small>Zip Code</small><p id="dZip">-</p></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px">
+            <button class="primary-btn" onclick="toggleModal('transMod')">Wire Transfer</button>
+            <button class="primary-btn" style="background:transparent; border:1px solid var(--gold); color:var(--gold)" onclick="toggleModal('transMod')">Withdrawal</button>
+        </div>
+    </div>
+
+    <div class="modal" id="regMod">
+        <div class="modal-content">
+            <h2>Membership Application</h2>
+            <p style="color:var(--text-gray); margin-bottom:25px; font-size:13px">Personal Identity Verification</p>
+            <input type="text" id="rName" placeholder="Legal Full Name">
+            <input type="email" id="rEmail" placeholder="Email Address">
+            <input type="tel" id="rPhone" placeholder="Phone Number">
+            <input type="password" id="rPass" placeholder="Create Password">
+            <input type="password" id="rPassConf" placeholder="Confirm Password">
+            <button class="primary-btn" onclick="registerUser()">Continue to Phase 2</button>
+        </div>
+    </div>
+
+    <div class="modal" id="kycMod">
+        <div class="modal-content">
+            <h2>Security Profile</h2>
+            <p style="color:var(--text-gray); margin-bottom:20px; font-size:13px">Set your financial authorization codes.</p>
+            
+            <div style="background: rgba(179, 147, 89, 0.1); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px dashed var(--gold);">
+                <p style="font-size: 10px; color: var(--gold); margin-bottom: 8px; font-weight: 800;">WITHDRAWAL PIN</p>
+                <input type="password" id="kPin" placeholder="****" maxlength="4" style="margin-bottom:0; text-align:center; font-size:24px; letter-spacing:10px;">
+            </div>
+
+            <input type="text" id="kCountry" placeholder="Country of Residence">
+            <input type="text" id="kState" placeholder="State/Region">
+            <input type="text" id="kAddress" placeholder="Full Street Address">
+            <input type="text" id="kZip" placeholder="Zip/Postal Code">
+            <button class="primary-btn" onclick="saveKYC()">Verify & Finalize</button>
+        </div>
+    </div>
+
+    <div class="modal" id="verifyMod">
+        <div class="modal-content" style="text-align:center">
+            <h2 style="color:var(--gold)">Verification Required</h2>
+            <p style="margin:20px 0; color:var(--text-gray); line-height:1.6">We have dispatched a secure activation link to your inbox. Please verify your email to access the Nitadol Private Vault.</p>
+            <button class="primary-btn" onclick="location.reload()">I Have Verified</button>
+        </div>
+    </div>
+
+    <div class="modal" id="loginMod">
+        <div class="modal-content">
+            <h2>Vault Access</h2>
+            <input type="email" id="lEmail" placeholder="Registered Email">
+            <input type="password" id="lPass" placeholder="Password">
+            <button class="primary-btn" onclick="loginUser()">Unlock Account</button>
+        </div>
+    </div>
+
+    <div class="modal" id="transMod">
+        <div class="modal-content">
+            <h2>Authorize Transaction</h2>
+            <div id="transInputs">
+                <input type="text" placeholder="Recipient Bank Name">
+                <input type="text" placeholder="Account Holder">
+                <input type="number" placeholder="IBAN / Account Number">
+                <input type="number" placeholder="Transfer Amount (€)">
+                <input type="password" placeholder="4-Digit Withdrawal PIN">
+                <button class="primary-btn" onclick="startTransfer()">Confirm Wire</button>
+            </div>
+            <div id="transLoading" style="display:none; text-align:center">
+                <div class="spinner" style="display:block"></div>
+                <p style="font-size:14px; margin-top:10px">Encrypting Transaction Tunnel...</p>
+            </div>
+            <div id="transError" style="display:none; color:var(--error); font-size:13px; border:1px solid var(--error); padding:20px; border-radius:12px; line-height:1.5">
+                <b>PROTOCOL ERROR [403]:</b> Your account is currently under "Legacy Status". To prevent asset freezing, external transfers are temporarily suspended. Please contact your Wealth Manager to perform a mandatory account upgrade.
+            </div>
+            <p onclick="toggleModal('transMod')" style="cursor:pointer; color:var(--text-gray); font-size:12px; margin-top:20px; text-align:center">Cancel Operation</p>
+        </div>
+    </div>
+
+    <div class="cookie-banner" id="cb">
+        <p style="font-size:12px"><b>Privacy Notice:</b> Nitadol Bank uses 256-bit encrypted cookies to ensure session security. <button onclick="document.getElementById('cb').style.display='none'" style="background:var(--gold); border:none; padding:5px 15px; border-radius:4px; margin-left:10px; font-weight:800; cursor:pointer">Accept</button></p>
+    </div>
+
+    <div class="chat-bubble">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="black"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCWNf25yp6GAU3tdQSaGnvEBohY22UkdXA",
+            authDomain: "nitadol-bank.firebaseapp.com",
+            databaseURL: "https://nitadol-bank-default-rtdb.firebaseio.com",
+            projectId: "nitadol-bank",
+            storageBucket: "nitadol-bank.firebasestorage.app",
+            messagingSenderId: "536702667702",
+            appId: "1:536702667702:web:2580e60c12f012caac8f17"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        window.toggleModal = (id) => {
+            const m = document.getElementById(id);
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        };
+
+        window.registerUser = async () => {
+            const email = document.getElementById('rEmail').value;
+            const pass = document.getElementById('rPass').value;
+            const conf = document.getElementById('rPassConf').value;
+            if(pass !== conf) return alert("Passwords mismatch");
+
+            try {
+                const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+                await sendEmailVerification(userCred.user);
+                set(ref(db, 'users/' + userCred.user.uid), {
+                    fullName: document.getElementById('rName').value,
+                    phone: document.getElementById('rPhone').value,
+                    balance: 0,
+                    id: Math.floor(100000 + Math.random() * 900000),
+                    kycComplete: false
+                });
+                document.getElementById('regMod').style.display = 'none';
+                document.getElementById('verifyMod').style.display = 'flex';
+            } catch (e) { alert(e.message); }
+        };
+
+        window.saveKYC = async () => {
+            const user = auth.currentUser;
+            const pin = document.getElementById('kPin').value;
+            if(pin.length < 4) return alert("PIN must be 4 digits");
+
+            set(ref(db, 'users/' + user.uid + '/kyc'), {
+                country: document.getElementById('kCountry').value,
+                state: document.getElementById('kState').value,
+                address: document.getElementById('kAddress').value,
+                zip: document.getElementById('kZip').value,
+                withdrawalPin: pin
+            });
+            set(ref(db, 'users/' + user.uid + '/kycComplete'), true);
+            location.reload();
+        };
+
+        window.loginUser = async () => {
+            try {
+                await signInWithEmailAndPassword(auth, document.getElementById('lEmail').value, document.getElementById('lPass').value);
+                location.reload();
+            } catch (e) { alert("Access Denied: Invalid Credentials"); }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if(!user.emailVerified) {
+                    document.getElementById('verifyMod').style.display = 'flex';
+                    return;
+                }
+                get(child(ref(db), `users/${user.uid}`)).then((snapshot) => {
+                    const data = snapshot.val();
+                    if(!data.kycComplete) document.getElementById('kycMod').style.display = 'flex';
+                    else showDashboard(data);
+                });
+            }
+        });
+
+        function showDashboard(data) {
+            document.getElementById('main-site').style.display = 'none';
+            document.getElementById('dash-view').style.display = 'block';
+            document.getElementById('dName').innerText = data.fullName;
+            document.getElementById('dBal').innerText = "€" + Number(data.balance).toLocaleString();
+            document.getElementById('dID').innerText = "Account ID: " + data.id;
+            document.getElementById('dCountry').innerText = data.kyc.country;
+            document.getElementById('dPhone').innerText = data.phone;
+            document.getElementById('dAddress').innerText = data.kyc.address;
+            document.getElementById('dZip').innerText = data.kyc.zip;
+        }
+
+        window.startTransfer = () => {
+            document.getElementById('transInputs').style.display = 'none';
+            document.getElementById('transLoading').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('transLoading').style.display = 'none';
+                document.getElementById('transError').style.display = 'block';
+            }, 5000);
+        };
+    </script>
+</body>
+</html>
